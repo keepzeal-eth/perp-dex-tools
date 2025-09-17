@@ -15,7 +15,6 @@ from helpers import TradingLogger
 from helpers.lark_bot import LarkBot
 
 
-
 @dataclass
 class TradingConfig:
     """Configuration class for trading parameters."""
@@ -316,6 +315,9 @@ class TradingBot:
                 )
 
                 self.logger.log(f"Current Position: {position_amt} | Active closing amount: {active_close_amount}")
+                # 同步發送 telegram 訊息
+                from helpers.telegram_notify import send_telegram_message
+                send_telegram_message(f"【{self.config.ticker}】持倉: {position_amt}，待平倉: {active_close_amount}")
                 self.last_log_time = time.time()
                 # Check for position mismatch
                 if abs(position_amt - active_close_amount) > (2 * self.config.quantity):
